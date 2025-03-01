@@ -42,7 +42,7 @@ public class UserServiceImp implements UserService, UserDetailsService {
     }
 
     public void update(long id, User user){
-        if(user.getId() != null)
+        if(user.getPassword() != null)
             user.setPassword(passwordEncoder.encode(user.getPassword()));
         userDao.update(id, user);
     }
