@@ -61,10 +61,14 @@ public class AdminController {
     }
 
     @PatchMapping("/{id}")
-    public String updateUser(@ModelAttribute("user") User user, BindingResult bindingResult,
+    public String updateUser(@ModelAttribute("user") User user, @RequestParam(required = false) String newPassword,
+                             BindingResult bindingResult,
                              @PathVariable("id") long id) {
         if (bindingResult.hasErrors())
             return "edit";
+
+        if(newPassword != null && !newPassword.isEmpty())
+            user.setPassword(newPassword);
 
         userService.update(id, user);
         return "redirect:/admin/users";

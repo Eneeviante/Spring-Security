@@ -1,5 +1,6 @@
 package ru.itmentor.spring.boot_security.demo.security;
 
+import jakarta.transaction.Transactional;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;

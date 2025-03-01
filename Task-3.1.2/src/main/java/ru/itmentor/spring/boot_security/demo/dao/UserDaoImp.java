@@ -3,6 +3,7 @@ package ru.itmentor.spring.boot_security.demo.dao;
 import jakarta.persistence.*;
 import jakarta.transaction.Transactional;
 import org.springframework.stereotype.Repository;
+import ru.itmentor.spring.boot_security.demo.models.Role;
 import ru.itmentor.spring.boot_security.demo.models.User;
 
 import java.util.List;
@@ -24,7 +25,8 @@ public class UserDaoImp implements UserDao {
 
     public User findByEmail(String email) {
         return entityManager
-                .createQuery("Select u from User u where u.email = :email", User.class)
+                .createQuery("Select u from User u " +
+                        "join fetch u.roles where u.email = :email", User.class)
                 .setParameter("email", email)
                 .getSingleResult();
     }
@@ -39,6 +41,8 @@ public class UserDaoImp implements UserDao {
         user.setFirstName(new_user.getFirstName());
         user.setLastName(new_user.getLastName());
         user.setEmail(new_user.getEmail());
+        if (new_user.getPassword() != null)
+            user.setPassword(new_user.getPassword());
         user.setRoles(new_user.getRoles());
         entityManager.merge(user);
     }

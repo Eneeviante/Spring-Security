@@ -1,9 +1,11 @@
 package ru.itmentor.spring.boot_security.demo.services;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import ru.itmentor.spring.boot_security.demo.dao.UserDao;
 import ru.itmentor.spring.boot_security.demo.models.Role;
@@ -16,14 +18,17 @@ import java.util.List;
 public class UserServiceImp implements UserService, UserDetailsService {
 
     private final UserDao userDao;
+    PasswordEncoder passwordEncoder;
 
     @Autowired
-    public UserServiceImp(UserDao userDao) {
+    public UserServiceImp(UserDao userDao, @Lazy PasswordEncoder passwordEncoder) {
         this.userDao = userDao;
+        this.passwordEncoder = passwordEncoder;
     }
 
     @Override
     public void add(User user) {
+        user.setPassword(passwordEncoder.encode(user.getPassword()));
         userDao.add(user);
     }
 
@@ -37,6 +42,8 @@ public class UserServiceImp implements UserService, UserDetailsService {
     }
 
     public void update(long id, User user){
+        if(user.getId() != null)
+            user.setPassword(passwordEncoder.encode(user.getPassword()));
         userDao.update(id, user);
     }
 
