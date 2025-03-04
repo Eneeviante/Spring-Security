@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <!DOCTYPE html>
+        <html xmlns:th="http://www.thymeleaf.org"
+              xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+        <head>
+        <meta charset="UTF-8">
+        <title>User Info</title>
+</head>
+<body>
+<div class="container mt-5">
+    <h1>User Info</h1>
+    <p th:text="${user.getFirstName() + ', ' + user.getLastName()}">VALUE</p>
+    <p th:text="${'Email: ' + user.getEmail()}">VALUE</p>
+    <p th:text="${'Role: ' + user.getRoles()}">VALUE</p>
+    <a href="/admin/users">Admin panel</a>
+    <form th:action="@{/logout}" method="post">
+        <button type="submit">Logout</button>
+    </form>
+</div>
+</body>
+</html>
