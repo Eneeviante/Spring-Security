@@ -21,7 +21,7 @@ import ru.itmentor.spring.boot_security.demo.util.UserIdNotFoundException;
 import java.util.List;
 import java.util.stream.Collectors;
 
-@Controller
+@RestController
 @RequestMapping("/admin")
 public class AdminController {
     private final UserService userService;
@@ -34,7 +34,6 @@ public class AdminController {
     }
 
     @GetMapping("/users")
-    @ResponseBody
     public List<UserDto> GetAllUsers() {
         return userService.getAll().stream()
                 .map(this::convertToUserDto)
@@ -42,7 +41,6 @@ public class AdminController {
     }
 
     @GetMapping("/{id}")
-    @ResponseBody
     public UserDto findById(@PathVariable("id") long id) {
         return convertToUserDto(userService.findById(id));
     }
@@ -59,18 +57,17 @@ public class AdminController {
     }
 
     @PatchMapping("/{id}")
-    public String updateUser(@RequestBody UserDto userDto,
+    public ResponseEntity<HttpStatus> updateUser(@RequestBody UserDto userDto,
                              BindingResult bindingResult,
                              @PathVariable("id") long id) {
         if (bindingResult.hasErrors())
-            return "edit";
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
 
         userService.update(id, convertToUser(userDto));
-        return "redirect:/admin/users";
+        return new ResponseEntity<>(HttpStatus.OK);
     }
 
     @DeleteMapping("del/{id}")
-    @ResponseBody
     public ResponseEntity<HttpStatus> deleteUser(@PathVariable("id") long id) {
         userService.delete(id);
         return ResponseEntity.ok(HttpStatus.OK);
